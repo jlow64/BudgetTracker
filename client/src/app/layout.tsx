@@ -1,5 +1,5 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { Metadata } from "next";
+import QueryClientProvider from "./providers";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -12,8 +12,6 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
-const queryClient = new QueryClient();
 
 export const metadata: Metadata = {
   title: "Budget Tracker",
@@ -30,9 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
+        <QueryClientProvider>{children}</QueryClientProvider>
       </body>
     </html>
   );

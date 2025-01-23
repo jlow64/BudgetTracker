@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "b/CDOwzfAPM=",
+  "success": true,
+  "projectFilePath": "Z:\\Projects\\BudgetTracker\\server\\server.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\grena\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.0\\microsoft.aspnetcore.openapi.9.0.0.nupkg.sha512",
+    "C:\\Users\\grena\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
