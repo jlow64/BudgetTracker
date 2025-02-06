@@ -1,21 +1,21 @@
 import type { Metadata } from "next";
 import QueryClientProvider from "./providers";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Comfortaa, Open_Sans } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const comfortaa = Comfortaa({
+  variable: "--font-comfortaa",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const openSans = Open_Sans({
+  variable: "--font-open-sans",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   title: "Budget Tracker",
-  description: "Dashboard",
+  description: "Stop, tracking time!",
 };
 
 export default function RootLayout({
@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${comfortaa.variable} ${openSans.variable} antialiased min-h-screen bg-brand-gradient`}
       >
         <QueryClientProvider>{children}</QueryClientProvider>
       </body>
