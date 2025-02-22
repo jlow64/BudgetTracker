@@ -103,7 +103,7 @@ export const CategoriesChart = () => {
             className='w-[160px] rounded-lg'
             aria-label='Select a value'
           >
-            <SelectValue placeholder='Last 3 months' />
+            <SelectValue placeholder='Select type' />
           </SelectTrigger>
           <SelectContent className='rounded-xl'>
             <SelectItem value='Income' className='rounded-lg'>

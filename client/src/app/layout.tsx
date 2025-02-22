@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import QueryClientProvider from "./providers";
 import { Comfortaa, Open_Sans } from "next/font/google";
 import "./globals.css";
+import { Navbar } from "@/components";
 
 const comfortaa = Comfortaa({
   variable: "--font-comfortaa",
@@ -28,7 +29,10 @@ export default function RootLayout({
       <body
         className={`${comfortaa.variable} ${openSans.variable} antialiased min-h-screen bg-brand-gradient`}
       >
-        <QueryClientProvider>{children}</QueryClientProvider>
+        <QueryClientProvider>
+          <Navbar />
+          {children}
+        </QueryClientProvider>
       </body>
     </html>
   );

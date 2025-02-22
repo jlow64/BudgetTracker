@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -20,29 +20,6 @@ import {
 } from "@/components/ui/popover";
 import { DownArrowIcon } from "./svg";
 
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
-
 interface ICombobox {
   data: { value: string; label: string }[];
   popoverPlaceholder?: string;
@@ -51,7 +28,7 @@ interface ICombobox {
 export function Combobox({
   data,
   popoverPlaceholder = "Select Category",
-  inputPlaceholder = "Seach Category",
+  inputPlaceholder = "Search Category",
 }: ICombobox) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
@@ -74,7 +51,7 @@ export function Combobox({
           )}
         >
           {value
-            ? frameworks.find((framework) => framework.value === value)?.label
+            ? data.find((el) => el.value === value)?.label
             : popoverPlaceholder}
           <DownArrowIcon />
         </Button>
@@ -85,10 +62,10 @@ export function Combobox({
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
-              {frameworks.map((framework) => (
+              {data.map((el) => (
                 <CommandItem
-                  key={framework.value}
-                  value={framework.value}
+                  key={el.value}
+                  value={el.value}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
                     setOpen(false);
@@ -97,10 +74,10 @@ export function Combobox({
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === framework.value ? "opacity-100" : "opacity-0"
+                      value === el.value ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  {framework.label}
+                  {el.label}
                 </CommandItem>
               ))}
             </CommandGroup>
