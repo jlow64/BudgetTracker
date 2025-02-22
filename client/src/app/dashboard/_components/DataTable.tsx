@@ -64,6 +64,7 @@ export function DataTable<TData, TValue>({
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
+          role='search'
           className='max-w-sm'
         />
       </div>

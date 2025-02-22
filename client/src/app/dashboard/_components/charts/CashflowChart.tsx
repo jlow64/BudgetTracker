@@ -107,7 +107,6 @@ export const CashflowChart = () => {
     }),
     [filteredData]
   );
-  console.log(total);
 
   return (
     <Card className={classes.wrapper}>
@@ -117,7 +116,7 @@ export const CashflowChart = () => {
             className={classes.select.trigger}
             aria-label='Select a value'
           >
-            <SelectValue placeholder='Last 3 months' />
+            <SelectValue placeholder='Select period' />
           </SelectTrigger>
           <SelectContent className={classes.select.content}>
             <SelectItem value='7d' className={classes.select.item}>

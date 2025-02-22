@@ -11,11 +11,16 @@ import {
   CategoriesCard,
   TransactionsCard,
 } from "./_components";
+import { transactionQuery } from "@/queries";
 
 export default function Dashboard() {
   const classes = {
     container: "flex flex-col w-full px-md lg:px-xl gap-md",
-    loading: "bg-foreground/50 h-[700px] flex-1",
+    loading: {
+      wrapper: "grid grid-cols-4 w-full gap-sm p-md",
+      card: "bg-foreground/50 h-[700px] flex-1",
+      table: "bg-foreground/50 h-[400px] col-span-4",
+    },
     top: {
       wrapper: "flex flex-row w-full justify-between py-lg",
       welcome: "font-comfortaa text-h6 text-foreground/90",
@@ -27,6 +32,7 @@ export default function Dashboard() {
     },
     middle: {
       wrapper: "flex flex-row flex-wrap 2xl:flex-nowrap w-full gap-md",
+      cards: "w-full flex gap-md flex-wrap md:flex-nowrap",
     },
     bottom: {
       wrapper: "flex flex-row w-full gap-md",
@@ -35,24 +41,19 @@ export default function Dashboard() {
 
   const { isPending, data } = useQuery({
     queryKey: ["transactionData"],
-    queryFn: async () => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/transaction`
-      );
-      return await response.json();
-    },
+    queryFn: async () => transactionQuery(),
   });
 
   // We will need zod for input validation
 
   if (isPending)
     return (
-      <div className='grid grid-cols-4 w-full gap-sm p-md'>
-        <Skeleton className={classes.loading} />
-        <Skeleton className={classes.loading} />
-        <Skeleton className={classes.loading} />
-        <Skeleton className={classes.loading} />
-        <Skeleton className={"bg-foreground/50 h-[400px] col-span-4"} />
+      <div className={classes.loading.wrapper}>
+        <Skeleton className={classes.loading.card} />
+        <Skeleton className={classes.loading.card} />
+        <Skeleton className={classes.loading.card} />
+        <Skeleton className={classes.loading.card} />
+        <Skeleton className={classes.loading.table} />
       </div>
     );
 
@@ -64,11 +65,11 @@ export default function Dashboard() {
         </h5>
       </section>
       <section className={classes.middle.wrapper}>
-        <div className='w-full flex gap-md flex-wrap md:flex-nowrap'>
+        <div className={classes.middle.cards}>
           <CashflowChart />
           <CashflowCard />
         </div>
-        <div className='w-full flex gap-md flex-wrap md:flex-nowrap'>
+        <div className={classes.middle.cards}>
           <CategoriesChart />
           <CategoriesCard />
         </div>
