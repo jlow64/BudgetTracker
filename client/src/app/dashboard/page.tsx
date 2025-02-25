@@ -12,14 +12,15 @@ import {
   TransactionsCard,
 } from "./_components";
 import { transactionQuery } from "@/queries";
+import { useUser } from "@auth0/nextjs-auth0";
 
 export default function Dashboard() {
   const classes = {
     container: "flex flex-col w-full px-md lg:px-xl gap-md",
     loading: {
-      wrapper: "grid grid-cols-4 w-full gap-sm p-md",
-      card: "bg-foreground/50 h-[700px] flex-1",
-      table: "bg-foreground/50 h-[400px] col-span-4",
+      text: "h-8 w-[300px]",
+      card: "h-[700px] flex-1",
+      table: "h-[400px] w-full",
     },
     top: {
       wrapper: "flex flex-row w-full justify-between py-lg",
@@ -39,21 +40,30 @@ export default function Dashboard() {
     },
   };
 
-  const { isPending, data } = useQuery({
+  const { isPending: isTransactionsPending, data } = useQuery({
     queryKey: ["transactionData"],
     queryFn: async () => transactionQuery(),
   });
 
+  const { isLoading: isUserLoading, user } = useUser();
+
   // We will need zod for input validation
 
-  if (isPending)
+  if (isTransactionsPending || isUserLoading)
     return (
-      <div className={classes.loading.wrapper}>
-        <Skeleton className={classes.loading.card} />
-        <Skeleton className={classes.loading.card} />
-        <Skeleton className={classes.loading.card} />
-        <Skeleton className={classes.loading.card} />
-        <Skeleton className={classes.loading.table} />
+      <div className={classes.container}>
+        <section className={classes.top.wrapper}>
+          <Skeleton className={classes.loading.text} />
+        </section>
+        <section className={classes.middle.wrapper}>
+          <Skeleton className={classes.loading.card} />
+          <Skeleton className={classes.loading.card} />
+          <Skeleton className={classes.loading.card} />
+          <Skeleton className={classes.loading.card} />
+        </section>
+        <section className={classes.bottom.wrapper}>
+          <Skeleton className={classes.loading.table} />
+        </section>
       </div>
     );
 
@@ -61,7 +71,7 @@ export default function Dashboard() {
     <div className={classes.container}>
       <section className={classes.top.wrapper}>
         <h5 className={classes.top.welcome}>
-          Welcome Koto, lets get back on track!
+          Welcome back {user?.given_name ?? user?.nickname}.
         </h5>
       </section>
       <section className={classes.middle.wrapper}>
