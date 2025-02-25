@@ -14,11 +14,16 @@ export default function Home() {
       wrapper: "flex gap-md mt-xl",
       card: "relative h-full min-w-[33%]",
       header: "flex flex-col h-full p-lg justify-between items-start",
+      title: "text-h2 w-[200px]",
+      description: "text-paragraphLg",
     },
     bottom: {
       wrapper: "flex flex-col justify-between bg-background font-comfortaa",
       callToAction: "flex justify-center gap-xl p-2xl px-3xl",
+      title: "text-h2",
+      description: "text-paragraphBase",
       footer: "flex justify-center gap-sm py-lg w-full text-foreground/75",
+      button: "text-h4 w-fit min-h-[80px]",
     },
   };
 
@@ -71,8 +76,10 @@ export default function Home() {
             key={`${info.title}-${Math.random()}`}
           >
             <CardHeader className={classes.middle.header}>
-              <CardTitle className='text-h2 w-[200px]'>{info.title}</CardTitle>
-              <h3 className='text-paragraphLg'>{info.description}</h3>
+              <CardTitle className={classes.middle.title}>
+                {info.title}
+              </CardTitle>
+              <h3 className={classes.middle.description}>{info.description}</h3>
             </CardHeader>
           </Card>
         ))}
@@ -80,16 +87,18 @@ export default function Home() {
       <section className={classes.bottom.wrapper}>
         <div className={classes.bottom.callToAction}>
           <div>
-            <h1 className='text-h2'>Ready to get started?</h1>
-            <h2 className='text-paragraphBase'>
+            <h1 className={classes.bottom.title}>Ready to get started?</h1>
+            <h2 className={classes.bottom.description}>
               If you're ready to conquer your financial goals, set yourself free
               today.
             </h2>
           </div>
-          <Button className='text-h4 w-fit min-h-[80px]'>
-            Start Now
-            <BulbIcon />
-          </Button>
+          <a href='/auth/login'>
+            <Button className={classes.bottom.button}>
+              Start Now
+              <BulbIcon />
+            </Button>
+          </a>
         </div>
         <footer className={classes.bottom.footer}>
           (c) Copyright jlow64 2025. All rights reserved. | Terms of Service |
