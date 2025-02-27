@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using server.Data;
@@ -14,9 +13,9 @@ public class CategoryController(AppDbContext dbContext) : ControllerBase
     private readonly AppDbContext dbContext = dbContext;
 
     [HttpGet]
-    public async Task<IActionResult> GetAllCategories()
+    public async Task<IActionResult> GetAllCategories(string UserId)
     {
-        var categoriesDomain = await dbContext.Categories.ToListAsync();
+        var categoriesDomain = await dbContext.Categories.Where(c => c.UserId == UserId).ToListAsync();
 
         // Map domain models to DTO
         var categoriesDTO = new List<CategoryDTO>();
@@ -26,7 +25,8 @@ public class CategoryController(AppDbContext dbContext) : ControllerBase
             {
                 Id = categoryDomain.Id,
                 Name = categoryDomain.Name,
-                Description = categoryDomain.Description,
+                Type = categoryDomain.Type,
+                UserId = categoryDomain.UserId
             });
         }
         return Ok(categoriesDTO);
@@ -43,7 +43,8 @@ public class CategoryController(AppDbContext dbContext) : ControllerBase
         {
             Id = categoryDomain.Id,
             Name = categoryDomain.Name,
-            Description = categoryDomain.Description,
+            Type = categoryDomain.Type,
+            UserId = categoryDomain.UserId,
         };
         return Ok(categoryDTO);
     }
@@ -54,7 +55,10 @@ public class CategoryController(AppDbContext dbContext) : ControllerBase
         var categoryDomainModel = new Category
         {
             Name = categoryRequest.Name,
-            Description = categoryRequest.Description,
+            UserId = categoryRequest.UserId,
+            Type = categoryRequest.Type,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
         };
 
         // Use domain model to create region
@@ -66,7 +70,8 @@ public class CategoryController(AppDbContext dbContext) : ControllerBase
         {
             Id = categoryDomainModel.Id,
             Name = categoryDomainModel.Name,
-            Description = categoryDomainModel.Description,
+            Type = categoryDomainModel.Type,
+            UserId = categoryDomainModel.UserId,
         };
 
         return CreatedAtAction(
@@ -84,7 +89,8 @@ public class CategoryController(AppDbContext dbContext) : ControllerBase
         if (currentCategory == null) return NotFound("Category not found. Please send a valid Category ID.");
 
         currentCategory.Name = requestCategory.Name;
-        currentCategory.Description = requestCategory.Description;
+        currentCategory.Type = requestCategory.Type;
+        currentCategory.UserId = requestCategory.UserId;
 
         await dbContext.SaveChangesAsync();
 
@@ -102,6 +108,6 @@ public class CategoryController(AppDbContext dbContext) : ControllerBase
         dbContext.Categories.Remove(currentCategory);
         await dbContext.SaveChangesAsync();
 
-        return Ok($"Category Id: {id} has been remove successfully.");
+        return Ok($"Category Id: {id} has been removed successfully.");
     }
 }

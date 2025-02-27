@@ -6,53 +6,52 @@ namespace server.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // modelBuilder.Entity<Account>().HasMany(a => a.Categories).WithOne().HasForeignKey(c => c.);
+        modelBuilder.Entity<Account>().HasMany(a => a.Transactions).WithOne().IsRequired();
+
+        modelBuilder.Entity<Category>().HasMany(c => c.Transactions).WithOne().IsRequired();
+    }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder
         .UseSeeding((context, _) =>
     {
+        var account = new Account()
+        {
+            UserId = "auth0|67ba4d8db76dd82863529b8d",
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now,
+        };
+        var mockAccount = context.Set<Account>().FirstOrDefault(a => a.UserId == "test");
+        if (mockAccount == null)
+        {
+            context.Set<Account>().Add(account);
+            context.SaveChanges();
+        }
         var categories = new List<Category>()
         {
             new()
             {
-                Name = "Monthly Expenses",
-                Description = "Tracking monthly spending",
+                Name = "Monthly",
+                UserId = account.UserId,
+                Type = TransactionType.Expense,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
             },
             new()
             {
                 Name = "Salary",
-                Description = "Income salary",
+                UserId = account.UserId,
+                Type = TransactionType.Income,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
             }
         };
         var mockCategories = context.Set<Category>().FirstOrDefault(c => c.Name == "Name");
         if (mockCategories == null)
         {
             context.Set<Category>().AddRange(categories);
-            context.SaveChanges();
-        }
-        var mockGoal = context.Set<Goal>().FirstOrDefault(g => g.Name == "Name");
-        if (mockGoal == null)
-        {
-            context.Set<Goal>().AddRange(
-                 new Goal()
-                 {
-                     Name = "House Deposit",
-                     Description = "For the first house!",
-                     Amount = 10000.00M
-                 },
-                new Goal()
-                {
-                    Name = "Dream PC",
-                    Description = "For the BEST PC",
-                    Amount = 20000.00M
-                },
-                new Goal()
-                {
-
-                    Name = "Wedding",
-                    Description = "*incoming wedding music*",
-                    Amount = 20000.00M
-                }
-            );
             context.SaveChanges();
         }
         var mockTransaction = context.Set<Transaction>().FirstOrDefault(t => t.Name == "Name");
@@ -64,26 +63,33 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                     Name = "Salary",
                     Description = "Monthly automatic payment",
                     Amount = 5000.00M,
-                    TimeStamp = DateTime.Now,
+                    Date = DateTime.Now,
                     Type = TransactionType.Income,
-                    Category = categories[1]
+                    CategoryId = categories[1].Id,
+                    AccountId = account.Id,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
                 },
                 new()
                 {
                     Name = "Countdown",
                     Description = "Monthy groceries",
                     Amount = 50.00M,
-                    TimeStamp = DateTime.Now,
+                    Date = DateTime.Now,
                     Type = TransactionType.Expense,
-                    Category = categories[0]
+                    CategoryId = categories[0].Id,
+                    AccountId = account.Id,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
                 }
             );
             context.SaveChanges();
         }
     });
+
+    public DbSet<Account> Accounts { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
 
     public DbSet<Category> Categories { get; set; }
 
-    public DbSet<Goal> Goals { get; set; }
 }

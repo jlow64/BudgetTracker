@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using server.Data;
@@ -14,11 +13,11 @@ public class TransactionController(AppDbContext dbContext) : ControllerBase
     private readonly AppDbContext dbContext = dbContext;
 
     [HttpGet]
-    public async Task<IActionResult> GetTransactions()
+    public async Task<IActionResult> GetTransactions(string UserId, Guid AccountId)
     {
         // Get domain data from database
         var transactionsDomain = await dbContext.Transactions.ToListAsync();
-        var categoriesDomain = await dbContext.Categories.ToListAsync();
+        var categoriesDomain = await dbContext.Categories.Where(c => c.UserId == UserId).ToListAsync();
 
         // Check if query is a hit
         if (transactionsDomain == null || categoriesDomain == null) return NotFound();
@@ -35,7 +34,7 @@ public class TransactionController(AppDbContext dbContext) : ControllerBase
                 Id = transactionDomain.Id,
                 Name = transactionDomain.Name,
                 Description = transactionDomain.Description,
-                TimeStamp = transactionDomain.TimeStamp,
+                Date = transactionDomain.Date,
                 Amount = transactionDomain.Amount,
                 Type = transactionDomain.Type,
                 // If queried category doesn't have a name, for now default is N/A
@@ -63,7 +62,7 @@ public class TransactionController(AppDbContext dbContext) : ControllerBase
             Id = transactionDomain.Id,
             Name = transactionDomain.Name,
             Description = transactionDomain.Description,
-            TimeStamp = transactionDomain.TimeStamp,
+            Date = transactionDomain.Date,
             Amount = transactionDomain.Amount,
             Type = transactionDomain.Type,
             Category = categoryDomain.Name
@@ -78,17 +77,20 @@ public class TransactionController(AppDbContext dbContext) : ControllerBase
         // Retrieve category in DB from id
         var categoryFromId = await dbContext.Categories.FirstOrDefaultAsync(c => c.Id == transactionRequest.CategoryId);
         // Check if requested category is valid
-        if (categoryFromId == null) return BadRequest("Invalid category");
+        if (categoryFromId == null) return BadRequest("Invalid Transaction");
 
         // Map request to Domain model
         var transactionDomainModel = new Transaction
         {
             Name = transactionRequest.Name,
             Description = transactionRequest.Description,
-            TimeStamp = DateTime.Now,
+            Date = DateTime.Now,
             Amount = transactionRequest.Amount,
             Type = transactionRequest.Type,
-            Category = categoryFromId
+            AccountId = transactionRequest.AccountId,
+            CategoryId = transactionRequest.CategoryId,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
         };
 
         // Add domain model to DB
@@ -101,10 +103,10 @@ public class TransactionController(AppDbContext dbContext) : ControllerBase
             Id = transactionDomainModel.Id,
             Name = transactionDomainModel.Name,
             Description = transactionDomainModel.Description,
-            TimeStamp = transactionDomainModel.TimeStamp,
+            Date = transactionDomainModel.Date,
             Amount = transactionDomainModel.Amount,
             Type = transactionDomainModel.Type,
-            Category = transactionDomainModel.Category.Name
+            Category = categoryFromId.Name
         };
 
         return CreatedAtAction(
@@ -124,9 +126,11 @@ public class TransactionController(AppDbContext dbContext) : ControllerBase
         currentTransaction.Name = requestTransaction.Name;
         currentTransaction.Description = requestTransaction.Description;
         currentTransaction.Amount = requestTransaction.Amount;
-        currentTransaction.TimeStamp = DateTime.Now;
+        currentTransaction.Date = requestTransaction.Date;
         currentTransaction.Type = requestTransaction.Type;
+        currentTransaction.AccountId = requestTransaction.AccountId;
         currentTransaction.CategoryId = requestTransaction.CategoryId;
+        currentTransaction.UpdatedAt = DateTime.Now;
 
         await dbContext.SaveChangesAsync();
 
