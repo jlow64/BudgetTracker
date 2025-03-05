@@ -3,8 +3,6 @@ import { cn } from "@/lib/utils";
 export const PlusIcon = ({ className }: { className?: string }) => {
   return (
     <svg
-      width='33'
-      height='32'
       viewBox='0 0 33 32'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'

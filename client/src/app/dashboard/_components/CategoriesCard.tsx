@@ -13,10 +13,11 @@ import {
   Textarea,
 } from "@/components";
 import React from "react";
+import { toast } from "sonner";
 
 export const CategoriesCard = () => {
   const classes = {
-    wrapper: "flex-1 md:basis-card-form min-w-card-form",
+    wrapper: "flex-1 w-full h-fit",
     switch: "flex items-center w-fit gap-sm md:w-full justify-between",
     submit: "justify-end",
     content: "justify-start flex-1",
@@ -46,7 +47,10 @@ export const CategoriesCard = () => {
         />
       </CardContent>
       <CardFooter className={classes.submit}>
-        <Button variant='outline'>
+        <Button
+          variant='outline'
+          onClick={() => toast.success("Category has been added successfuly")}
+        >
           <PlusIcon />
           Add
         </Button>

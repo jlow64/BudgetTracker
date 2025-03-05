@@ -19,17 +19,15 @@ import {
 const Profile = () => {
   const classes = {
     profile:
-      "flex justify-center items-center gap-sm md:gap-md font-openSans text-subHeading cursor-pointer focus:outline-none",
-    name: "font-comfortaa",
+      "flex justify-center items-center gap-md bg-background rounded-full font-openSans pl-md text-subHeading cursor-pointer focus:outline-none",
+    name: "font-comfortaa text-foreground/75",
     loading: {
-      text: "h-4 w-[100px]",
+      text: "h-4 w-[200px]",
       profile: "h-10 w-10 rounded-full font-comfortaa",
     },
   };
 
   const { user, isLoading, error } = useUser();
-
-  console.log(user?.picture);
 
   return isLoading ? (
     <div className={classes.profile}>
@@ -45,7 +43,7 @@ const Profile = () => {
           <AvatarFallback>{user?.name}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent align='end'>
         <a href='/auth/logout'>
           <DropdownMenuItem>Logout</DropdownMenuItem>
         </a>
@@ -57,16 +55,15 @@ const Profile = () => {
 export const Navbar = () => {
   const classes = {
     container: {
-      box: "flex justify-between w-full h-[5rem] px-lg md:px-xl ",
-      style: "bg-background/80",
+      box: "flex justify-between items-center w-full h-[4.5rem] px-lg ",
+      style: "text-background",
     },
     logo: {
-      wrapper:
-        "flex justify-center items-center gap-sm md:gap-md cursor-pointer",
+      wrapper: "flex justify-center items-center gap-xl cursor-pointer",
       header: "font-comfortaa text-subHeading md:text-h6",
     },
     profile:
-      "flex justify-center items-center gap-sm md:gap-md font-comfortaa text-subHeading cursor-pointer focus:outline-none",
+      "flex justify-center items-center h-[40px] px-md py-sm bg-background rounded-md font-comfortaa text-subHeading text-secondary cursor-pointer focus:outline-none",
   };
 
   const pathName = usePathname();
@@ -82,7 +79,7 @@ export const Navbar = () => {
         <Profile />
       ) : (
         <a href='/auth/login' className={classes.profile}>
-          Login/Signup
+          Login / Signup
         </a>
       )}
     </nav>

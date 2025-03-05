@@ -15,10 +15,11 @@ import {
   Textarea,
 } from "@/components";
 import React from "react";
+import { toast } from "sonner";
 
 export const CashflowCard = () => {
   const classes = {
-    wrapper: "flex-1 md:basis-card-form min-w-card-form",
+    wrapper: "flex-1",
     switch: "flex items-center w-fit gap-sm md:w-full justify-between",
     submit: "justify-end",
   };
@@ -46,7 +47,12 @@ export const CashflowCard = () => {
         <Input id='cashflow-input' placeholder='$0.00' />
       </CardContent>
       <CardFooter className={classes.submit}>
-        <Button variant='outline'>
+        <Button
+          variant='outline'
+          onClick={() =>
+            toast.success("Transaction has been added successfuly")
+          }
+        >
           <PlusIcon />
           Add
         </Button>

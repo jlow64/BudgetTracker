@@ -10,7 +10,7 @@ export const PiggyIcon = ({ className }: { className?: string }) => {
       viewBox='0 0 226.777 226.777'
       enableBackground='new 0 0 226.777 226.777'
       xmlSpace='preserve'
-      className={cn("h-[2.5rem] w-[2.5rem] fill-foreground", className)}
+      className={cn("h-[2.5rem] w-[2.5rem] fill-background", className)}
     >
       <path
         d='M221.698,121.885l-7.878-8.257c0.262-17.5-4.803-34.801-14.581-50.149

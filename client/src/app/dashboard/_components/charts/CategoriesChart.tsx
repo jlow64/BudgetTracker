@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useUser } from "@auth0/nextjs-auth0";
+import { useQuery } from "@tanstack/react-query";
 import { Pie, PieChart as RechartsPieChart } from "recharts";
 
 import {
@@ -20,6 +22,8 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { TransactionTypeEnum } from "@/types";
+import { categoryQuery } from "@/queries";
+
 const chartData = [
   {
     category: "groceries",
@@ -76,13 +80,43 @@ const chartConfig = {
 
 export const CategoriesChart = () => {
   const classes = {
-    container: "flex-1 md:basis-full bg-background/50",
+    container: "flex bg-background/50 max-h-[600px] h-full px-xl",
     header: "items-center justify-between pb-0",
     chart: {
       wrapper: "aspect-square h-full max-h-[500px]",
+      legend:
+        "-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center",
     },
   };
   const [type, setType] = useState<string>("Expense");
+
+  const { isLoading: isUserLoading, user } = useUser();
+
+  const userId = user?.sub;
+  console.log(userId);
+
+  const { isPending: isCategoriesPending, data: data } = useQuery({
+    queryKey: ["categoryData", userId],
+    queryFn: async () => categoryQuery(userId),
+    enabled: !!userId,
+  });
+
+  const dynamicChartConfig = () => {
+    if (data) {
+      let chartConfig: ChartConfig = {
+        total: {
+          label: "Total",
+        },
+      };
+      data.map((e, index) => {
+        chartConfig[e.name] = {
+          label: e.name,
+          color: `hsl(var(--chart-${++index}))`,
+        };
+      });
+      return chartConfig;
+    }
+  };
 
   const filteredData = useMemo(
     () =>
@@ -105,7 +139,7 @@ export const CategoriesChart = () => {
           >
             <SelectValue placeholder='Select type' />
           </SelectTrigger>
-          <SelectContent className='rounded-xl'>
+          <SelectContent className='rounded-xl bg-background border-none'>
             <SelectItem value='Income' className='rounded-lg'>
               Income
             </SelectItem>
@@ -124,7 +158,7 @@ export const CategoriesChart = () => {
             />
             <ChartLegend
               content={<ChartLegendContent nameKey='category' />}
-              className='-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center'
+              className={classes.chart.legend}
             />
             <Pie
               data={filteredData}

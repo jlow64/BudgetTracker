@@ -5,12 +5,14 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "flex items-center justify-center gap-sm whitespace-nowrap rounded-lg font-comfortaa transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "flex items-center justify-center gap-md whitespace-nowrap rounded-lg font-comfortaa transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-brand-gradient text-foreground/75 shadow transition duration-300 ease-in-out hover:scale-110",
+          "bg-tertiary text-background shadow transition duration-300 ease-in-out hover:scale-105",
+        secondary:
+          "bg-secondary text-background shadow transition duration-300 ease-in-out hover:scale-105",
         outline:
           "border border-input bg-background text-foreground stroke-foreground shadow-sm hover:bg-foreground hover:text-background hover:stroke-background active:bg-foreground/75",
         input: "border border-transparent bg-foreground",
@@ -18,7 +20,7 @@ const buttonVariants = cva(
         ghost: "border border-transparent",
       },
       size: {
-        default: "h-input w-fit px-lg py-md text-subHeading",
+        default: "h-input w-fit px-xl py-lg",
         sm: "h-fit justify-center p-sm text-subHeading",
         icon: "h-9 w-9",
       },

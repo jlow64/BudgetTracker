@@ -56,8 +56,8 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className='rounded-sm'>
-      <div className='flex items-center py-md'>
+    <div className='flex flex-col justify-between size-full'>
+      <div className='flex items-center'>
         <Input
           placeholder='Filter by name'
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -111,7 +111,7 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      <div className='flex items-center justify-end gap-sm p-md pr-0'>
+      <div className='flex items-center justify-end gap-sm'>
         <Button
           variant='outline'
           size='sm'

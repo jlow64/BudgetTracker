@@ -6,4 +6,5 @@ export * from "./RightArrowIcon";
 export * from "./PiggyIcon";
 export * from "./CashflowIcon";
 export * from "./FilterIcon";
+export * from "./ForwardIcon";
 export * from "./TransactionsIcon";
