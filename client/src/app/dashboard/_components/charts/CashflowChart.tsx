@@ -59,7 +59,7 @@ const chartConfig = {
 
 export const CashflowChart = () => {
   const classes = {
-    wrapper: "flex-1 md:basis-full bg-background/50",
+    wrapper: "flex flex-1 md:basis-full bg-background/50 max-h-[600px] px-xl",
     header: {
       wrapper: "justify-between",
       title: "text-h4 md:text-h1",
@@ -69,7 +69,7 @@ export const CashflowChart = () => {
       content: "rounded-md",
       item: "rounded-lg",
     },
-    chart: "aspect-square h-full max-h-[500px]",
+    chart: "aspect-square h-full max-h-[500px] py-lg",
   };
   const [timeRange, setTimeRange] = React.useState("7d");
 

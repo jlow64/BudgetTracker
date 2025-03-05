@@ -1,7 +1,6 @@
 "use client";
 
-import { Button, Card, CardHeader, CardTitle } from "@/components";
-import { BulbIcon } from "@/components/svg/BulbIcon";
+import { Button, Card, CardHeader, CardTitle, ForwardIcon } from "@/components";
 import { animate, motion, useMotionValue } from "framer-motion";
 import { useEffect } from "react";
 import useMeasure from "react-use-measure";
@@ -9,21 +8,24 @@ import useMeasure from "react-use-measure";
 export default function Home() {
   const classes = {
     container:
-      "flex flex-col size-full h-[calc(100vh-80px)] justify-between overflow-hidden",
+      "flex flex-col size-full h-[calc(100vh-72px)] gap-2xl overflow-hidden",
     middle: {
-      wrapper: "flex gap-md mt-xl",
-      card: "relative h-full min-w-[33%]",
+      wrapper: "flex gap-xl mt-2xl py-sm w-full",
+      card: "relative h-full min-w-[33%] shadow-xl",
       header: "flex flex-col h-full p-lg justify-between items-start",
       title: "text-h2 w-[200px]",
       description: "text-paragraphLg",
     },
     bottom: {
-      wrapper: "flex flex-col justify-between bg-background font-comfortaa",
-      callToAction: "flex justify-center gap-xl p-2xl px-3xl",
+      wrapper:
+        "flex flex-col size-full justify-between items-center font-comfortaa px-lg",
+      callToAction:
+        "flex w-full items-center justify-center gap-xl py-3xl px-[400px] bg-background text-foreground/75 rounded-md shadow-sm",
+      textArea: "flex flex-col gap-md",
       title: "text-h2",
-      description: "text-paragraphBase",
+      description: "text-paragraphLg max-w-[650px]",
       footer: "flex justify-center gap-sm py-lg w-full text-foreground/75",
-      button: "text-h4 w-fit min-h-[80px]",
+      button: "text-h4 text-background w-fit min-h-[80px] shadow-2xl",
     },
   };
 
@@ -50,7 +52,7 @@ export default function Home() {
 
   useEffect(() => {
     let controls;
-    let finalPosition = -width - 32;
+    let finalPosition = -width - 72;
 
     controls = animate(xTranslation, [0, finalPosition], {
       ease: "linear",
@@ -86,7 +88,7 @@ export default function Home() {
       </motion.section>
       <section className={classes.bottom.wrapper}>
         <div className={classes.bottom.callToAction}>
-          <div>
+          <div className={classes.bottom.textArea}>
             <h1 className={classes.bottom.title}>Ready to get started?</h1>
             <h2 className={classes.bottom.description}>
               If you're ready to conquer your financial goals, set yourself free
@@ -96,13 +98,13 @@ export default function Home() {
           <a href='/auth/login'>
             <Button className={classes.bottom.button}>
               Start Now
-              <BulbIcon />
+              <ForwardIcon />
             </Button>
           </a>
         </div>
         <footer className={classes.bottom.footer}>
-          (c) Copyright jlow64 2025. All rights reserved. | Terms of Service |
-          Privacy Policy | Cookies | Licenses
+          (c) Copyright jlow64 2025. All rights reserved. Terms of Service
+          Privacy Policy Cookies Licenses
         </footer>
       </section>
     </div>

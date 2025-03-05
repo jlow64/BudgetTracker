@@ -14,9 +14,9 @@ export default {
         openSans: ["var(--font-open-sans)"],
       },
       fontSize: {
-        h1: ["3rem", { lineHeight: "53px", fontWeight: 700 }],
+        h1: ["3rem", { lineHeight: "53.5px", fontWeight: 700 }],
         h2: ["2.5rem", { lineHeight: "45px", fontWeight: 700 }],
-        h3: ["2.06rem", { lineHeight: "37px", fontWeight: 300 }],
+        h3: ["2.06rem", { lineHeight: "37px", fontWeight: 700 }],
         h4: ["1.75rem", { lineHeight: "32px", fontWeight: 700 }],
         h5: ["1.44rem", { lineHeight: "25px", fontWeight: 700 }],
         h6: ["1.19rem", { lineHeight: "21px", fontWeight: 700 }],
@@ -27,7 +27,7 @@ export default {
       },
       backgroundImage: {
         "brand-gradient":
-          "linear-gradient(to bottom, hsl(var(--tertiary)), hsl(var(--secondary)))",
+          "linear-gradient(to top, hsla(var(--primary) / 50%) 10%, hsl(var(--secondary) / 50%) 90%)",
       },
       colors: {
         background: "hsl(var(--background) / <alpha-value>)",
@@ -78,10 +78,11 @@ export default {
       spacing: {
         sm: "0.5rem",
         md: "1rem",
-        lg: "2rem",
-        xl: "5rem",
-        "2xl": "7.5rem",
-        "3xl": "12.5rem",
+        lg: "1.5rem",
+        xl: "2rem",
+        "2xl": "5rem",
+        "3xl": "7.5rem",
+        "4xl": "12.5rem",
         input: "2.75rem",
         "card-form": "17rem",
       },

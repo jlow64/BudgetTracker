@@ -3,6 +3,7 @@ import QueryClientProvider from "./providers";
 import { Comfortaa, Open_Sans } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components";
+import { Toaster } from "@/components/ui/sonner";
 
 const comfortaa = Comfortaa({
   variable: "--font-comfortaa",
@@ -25,12 +26,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang='en' className='bg-background'>
       <body
         className={`${comfortaa.variable} ${openSans.variable} antialiased min-h-screen bg-brand-gradient`}
       >
         <QueryClientProvider>
           <Navbar />
+          <Toaster position='top-right' />
           {children}
         </QueryClientProvider>
       </body>

@@ -62,7 +62,7 @@ export const columns: ColumnDef<ITransaction>[] = [
     header: "Category",
   },
   {
-    accessorKey: "timeStamp",
+    accessorKey: "date",
     header: ({ column }) => {
       return (
         <Button
@@ -77,7 +77,7 @@ export const columns: ColumnDef<ITransaction>[] = [
       );
     },
     cell: ({ row }) => {
-      const timeStamp = row.getValue("timeStamp") as string;
+      const timeStamp = row.getValue("date") as string;
       const parsedDate = new Date(timeStamp).toLocaleString("en-NZ", {
         day: "numeric",
         year: "numeric",
