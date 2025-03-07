@@ -4,19 +4,38 @@
 # https://aka.ms/yaml
 
 trigger:
-  - main
+  branches:
+    include:
+    - dev
 
 pool: jlow-personal
 
-steps:
-  - script: echo Hello, world!
-    displayName: "Run a one-line script"
+variables:
+  buildConfiguration: 'Release'
+  solution: '**/BudgetTracker.csproj'
+  project: '**/server.csproj'
 
-  - script: |
-      echo Add other tasks to build, test, and deploy your project.
-      echo See https://aka.ms/yaml
-    displayName: "Run a multi-line script"
-  - task: DotNetCoreCLI@2
+steps:
+  - task: NuGetToolInstaller@1
+    name: 'NugetToolInstaller'
+  - task: NuGetCommand@2
+    name: 'RestoreNuget'
     inputs:
-      azureSubscription: "Free Trial(2568667a-3b99-4183-8d2f-b1ad5929ce7d)"
-      command: "build"
+      command: 'restore'
+      restoreSolution: '${solution}'
+      feedsToUse: 'select'
+
+  - task: DotNetCoreCLI@2
+    name: 'buildArtifact'
+    inputs:
+      command: 'build'
+      projects: '${project}'
+      arguments: '--configuration ${buildConfiguration} --output(Build.ArtifactStagingDirectory)'
+      zipAfterPublish: true
+  
+  - task: PublishBuildArtifacts@1
+    name: 'publishArtifact'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'budgetTrackerArtifact'
+      publishLocation: 'Container'
