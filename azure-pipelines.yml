@@ -13,7 +13,7 @@ pool: jlow-personal
 variables:
   buildConfiguration: 'Release'
   solution: '**/BudgetTracker.sln'
-  project: '**/server.csproj'
+  project: '**/*.csproj'
 
 steps:
   - task: NuGetToolInstaller@1
