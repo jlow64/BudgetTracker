@@ -12,7 +12,7 @@ pool: jlow-personal
 
 variables:
   buildConfiguration: 'Release'
-  solution: '**/BudgetTracker.csproj'
+  solution: '**/BudgetTracker.sln'
   project: '**/server.csproj'
 
 steps:
