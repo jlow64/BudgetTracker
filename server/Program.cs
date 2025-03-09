@@ -14,16 +14,25 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 builder.Services.AddDbContext<AppDbContext>(option => option.UseSqlServer(
-    builder.Configuration.GetConnectionString("ServerConnectionString")
+    "name=ServerConnectionString"
 ));
 
 //services cors
 builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
 {
-    builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
+    builder.WithOrigins("http://localhost:3000", "https://budget-tracker-git-dev-justin64lowgmailcoms-projects.vercel.app").AllowAnyMethod().AllowAnyHeader();
 }));
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    if (dbContext.Database.IsRelational())
+    {
+        dbContext.Database.Migrate();
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
