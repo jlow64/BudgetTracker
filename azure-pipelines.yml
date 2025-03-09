@@ -1,0 +1,41 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+    - dev
+
+pool: jlow-personal
+
+variables:
+  buildConfiguration: 'Release'
+  solution: '**\BudgetTracker.sln'
+  project: '**\*.csproj'
+
+steps:
+  - task: NuGetToolInstaller@1
+    name: 'NugetToolInstaller'
+  - task: NuGetCommand@2
+    name: 'RestoreNuget'
+    inputs:
+      command: 'restore'
+      restoreSolution: '${solution}'
+      feedsToUse: 'select'
+
+  - task: DotNetCoreCLI@2
+    name: 'buildArtifact'
+    inputs:
+      command: 'build'
+      projects: '${project}'
+      arguments: '--configuration ${buildConfiguration} --output(Build.ArtifactStagingDirectory)'
+      zipAfterPublish: true
+  
+  - task: PublishBuildArtifacts@1
+    name: 'publishArtifact'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'budgetTrackerArtifact'
+      publishLocation: 'Container'
