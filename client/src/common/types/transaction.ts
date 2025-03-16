@@ -3,7 +3,7 @@ export enum TransactionTypeEnum {
   Expense,
 }
 export type ITransaction = {
-  id: number;
+  id: string;
   name: string;
   description: string;
   amount: number;
@@ -11,9 +11,15 @@ export type ITransaction = {
   type: TransactionTypeEnum;
   category: string;
 };
+export type ITransactionDTO = Omit<ITransaction, "id" | "category" | "date"> & {
+  date: Date;
+  accountId: string;
+  categoryId: string;
+};
 export type ICategory = {
   id: number;
   name: string;
   type: TransactionTypeEnum;
   userId: string;
 };
+export type ICategoryDTO = Omit<ICategory, "id">;

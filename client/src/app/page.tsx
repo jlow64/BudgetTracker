@@ -1,6 +1,12 @@
 "use client";
 
-import { Button, Card, CardHeader, CardTitle, ForwardIcon } from "@/components";
+import {
+  Button,
+  Card,
+  CardHeader,
+  CardTitle,
+  ForwardIcon,
+} from "@/common/components";
 import { animate, motion, useMotionValue } from "framer-motion";
 import { useEffect } from "react";
 import useMeasure from "react-use-measure";

@@ -1,7 +1,7 @@
 import { expect, test, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { Combobox } from "@/components";
+import { Combobox } from "@/common/components";
 
 Element.prototype.scrollIntoView = vi.fn();
 global.ResizeObserver = vi.fn().mockImplementation(() => ({

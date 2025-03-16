@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import QueryClientProvider from "./providers";
 import { Comfortaa, Open_Sans } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components";
-import { Toaster } from "@/components/ui/sonner";
+import { Navbar } from "@/common/components";
+import { Toaster } from "@/common/components/ui/sonner";
 
 const comfortaa = Comfortaa({
   variable: "--font-comfortaa",

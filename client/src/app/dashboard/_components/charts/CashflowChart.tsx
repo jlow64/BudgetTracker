@@ -21,31 +21,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components";
-
-const chartData = [
-  { date: "2025-01-01", amount: 222 },
-  { date: "2025-01-02", amount: -97 },
-  { date: "2025-01-03", amount: 167 },
-  { date: "2025-01-04", amount: 242 },
-  { date: "2025-01-05", amount: 373 },
-  { date: "2025-01-06", amount: 301 },
-  { date: "2025-01-07", amount: 245 },
-  { date: "2025-01-08", amount: 222 },
-  { date: "2025-01-09", amount: -97 },
-  { date: "2025-01-10", amount: 167 },
-  { date: "2025-01-11", amount: 242 },
-  { date: "2025-01-12", amount: 373 },
-  { date: "2025-01-13", amount: 301 },
-  { date: "2025-01-14", amount: 245 },
-  { date: "2025-01-15", amount: 222 },
-  { date: "2025-01-16", amount: -97 },
-  { date: "2025-01-17", amount: 167 },
-  { date: "2025-01-18", amount: 242 },
-  { date: "2025-01-19", amount: 373 },
-  { date: "2025-01-20", amount: 301 },
-  { date: "2025-01-21", amount: 245 },
-];
+} from "@/common/components";
+import { useTransaction } from "@/common/hooks";
+import { ITransaction, TransactionTypeEnum } from "@/common/types";
 
 const chartConfig = {
   views: {
@@ -73,7 +51,27 @@ export const CashflowChart = () => {
   };
   const [timeRange, setTimeRange] = React.useState("7d");
 
-  const filteredData = chartData.filter((item) => {
+  const { transactionsData } = useTransaction();
+
+  // We need to convert our transaction data into a format that recharts can parse
+  const convertChartData = (data?: ITransaction[]) => {
+    if (data) {
+      const convertedData = data.map((transaction) => {
+        return {
+          date: transaction.date,
+          amount:
+            transaction.type === TransactionTypeEnum.Expense
+              ? -transaction.amount
+              : transaction.amount,
+        };
+      });
+      return convertedData;
+    }
+    return [];
+  };
+
+  // Filters data by a range of selected dates
+  const filteredData = convertChartData(transactionsData).filter((item) => {
     const date = new Date(item.date);
     const referenceDate = Date.now();
     let daysToSubtract = 90;
@@ -108,6 +106,7 @@ export const CashflowChart = () => {
     [filteredData]
   );
 
+  // TODO: Will have to rethink the way we might want to display the data.
   return (
     <Card className={classes.wrapper}>
       <CardHeader className={classes.header.wrapper}>
