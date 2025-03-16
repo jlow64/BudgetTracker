@@ -1,5 +1,10 @@
 import React from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/common/components/ui/tabs";
 import { CashflowChart, CategoriesChart } from "./charts";
 
 export const ChartsCard = () => {

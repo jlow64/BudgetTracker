@@ -1,23 +1,22 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useUser } from "@auth0/nextjs-auth0";
-import { Button, PlusIcon, Skeleton } from "@/components";
+import { Skeleton } from "@/common/components";
 import {
   DataTable,
   columns,
   TransactionsCard,
   ChartsCard,
 } from "./_components";
-import { accountGetQuery, transactionQuery } from "@/queries";
 import { InputModal } from "./_components/InputModal";
+import { useTransaction } from "@/common/hooks";
 
 export default function Dashboard() {
   const classes = {
     container:
       "flex flex-col size-full min-h-[calc(100vh-72px)] px-md lg:px-lg justify-between",
     loading: {
-      text: "h-8 w-[300px]",
+      text: "h-10 w-[400px]",
       card: "h-[700px] flex-1",
       table: "h-[400px] w-full",
     },
@@ -40,26 +39,11 @@ export default function Dashboard() {
   };
 
   const { isLoading: isUserLoading, user } = useUser();
-
-  const userId = user?.sub;
-
-  const { isPending: isAccountPending, data: accountData } = useQuery({
-    queryKey: ["accountData", userId],
-    queryFn: async () => accountGetQuery(userId),
-    enabled: !!userId,
-  });
-
-  const accountId = accountData?.id;
-
-  const { isPending: isTransactionsPending, data: transactionData } = useQuery({
-    queryKey: ["transactionData", userId, accountId],
-    queryFn: async () => transactionQuery(userId, accountId),
-    enabled: !!userId && !!accountId,
-  });
+  const { isTransactionsPending, transactionsData } = useTransaction();
 
   // We will need zod for input validation
 
-  if (isUserLoading || isAccountPending || isTransactionsPending)
+  if (isUserLoading || isTransactionsPending)
     return (
       <div className={classes.container}>
         <section className={classes.top.wrapper}>
@@ -68,11 +52,6 @@ export default function Dashboard() {
         <section className={classes.middle.wrapper}>
           <Skeleton className={classes.loading.card} />
           <Skeleton className={classes.loading.card} />
-          <Skeleton className={classes.loading.card} />
-          <Skeleton className={classes.loading.card} />
-        </section>
-        <section className={classes.bottom.footer}>
-          <Skeleton className={classes.loading.table} />
         </section>
       </div>
     );
@@ -89,8 +68,8 @@ export default function Dashboard() {
         <ChartsCard />
         <div className={classes.middle.transactions.wrapper}>
           <TransactionsCard>
-            {transactionData && (
-              <DataTable columns={columns} data={transactionData} />
+            {transactionsData && (
+              <DataTable columns={columns} data={transactionsData} />
             )}
           </TransactionsCard>
         </div>

@@ -1,6 +1,6 @@
 import { expect, test, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { Navbar } from "@/components";
+import { Navbar } from "@/common/components";
 
 vi.mock("next/navigation", () => ({
   useRouter() {},

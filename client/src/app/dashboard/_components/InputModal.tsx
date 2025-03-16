@@ -1,7 +1,6 @@
 import React from "react";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -11,7 +10,7 @@ import {
   AlertDialogTrigger,
   Button,
   PlusIcon,
-} from "@/components";
+} from "@/common/components";
 import { CategoriesCard } from "./CategoriesCard";
 import { CashflowCard } from "./CashflowCard";
 
@@ -22,25 +21,29 @@ export const InputModal = () => {
     content: "bg-brand-gradient",
     cardWrapper: "flex gap-lg min-w-fit",
     header: "gap-lg",
+    description: "text-background font-openSans",
   };
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button className={classes.button} variant='secondary'>
-          Add Transaction
+          Add Details
           <PlusIcon className={classes.icon} />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className={classes.content}>
         <AlertDialogHeader className={classes.header}>
-          <AlertDialogTitle>Add Transaction</AlertDialogTitle>
-          <div className={classes.cardWrapper}>
+          <AlertDialogTitle>Add Details</AlertDialogTitle>
+          <AlertDialogDescription className={classes.description}>
+            Input your transactions and categories here
+          </AlertDialogDescription>
+          <div id='input-cards' className={classes.cardWrapper}>
             <CashflowCard />
             <CategoriesCard />
           </div>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>Close</AlertDialogCancel>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

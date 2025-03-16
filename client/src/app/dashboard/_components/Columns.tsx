@@ -1,9 +1,9 @@
 "use client";
 
-import { ITransaction, TransactionTypeEnum } from "@/types";
+import { ITransaction, TransactionTypeEnum } from "@/common/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, ArrowUpDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/common/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +11,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components";
+} from "@/common/components";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { transactionDeleteQuery } from "@/common/queries";
+import { toast } from "sonner";
+import { useUser } from "@auth0/nextjs-auth0";
+import { useAccount } from "@/common/hooks";
 
 export const columns: ColumnDef<ITransaction>[] = [
   {
@@ -90,6 +95,29 @@ export const columns: ColumnDef<ITransaction>[] = [
     id: "actions",
     cell: ({ row }) => {
       const transaction = row.original;
+      const classes = {
+        delete: "text-destructive",
+      };
+
+      const queryClient = useQueryClient();
+
+      const { user } = useUser();
+      const { accountData } = useAccount();
+
+      const userId = user?.sub;
+      const accountId = accountData?.id;
+
+      const mutation = useMutation({
+        mutationFn: (transactionId: string) =>
+          transactionDeleteQuery(transactionId),
+        onSuccess: (d) => {
+          const message = d?.name ? `for ${d?.name}` : "";
+          toast.success(`Transaction ${message} has been deleted successfuly`);
+          queryClient.invalidateQueries({
+            queryKey: ["transactionData", userId, accountId],
+          });
+        },
+      });
 
       return (
         <DropdownMenu>
@@ -102,13 +130,18 @@ export const columns: ColumnDef<ITransaction>[] = [
           <DropdownMenuContent align='end'>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(`${transaction.id}`)}
+              onClick={() => navigator.clipboard.writeText(transaction.id)}
             >
               Copy transaction ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Edit Transaction</DropdownMenuItem>
-            <DropdownMenuItem>Delete Transaction</DropdownMenuItem>
+            <DropdownMenuItem
+              className={classes.delete}
+              onClick={() => mutation.mutate(transaction.id)}
+            >
+              Delete Transaction
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

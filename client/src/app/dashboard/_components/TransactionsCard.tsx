@@ -4,7 +4,7 @@ import {
   CardHeader,
   CardTitle,
   TransactionsIcon,
-} from "@/components";
+} from "@/common/components";
 import React from "react";
 
 export const TransactionsCard = ({ children }: React.PropsWithChildren) => {

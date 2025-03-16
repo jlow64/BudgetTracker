@@ -1,8 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useUser } from "@auth0/nextjs-auth0";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
 import { Pie, PieChart as RechartsPieChart } from "recharts";
 
 import {
@@ -11,8 +9,13 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+} from "@/common/components";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/common/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
@@ -20,9 +23,9 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart";
-import { TransactionTypeEnum } from "@/types";
-import { categoryQuery } from "@/queries";
+} from "@/common/components/ui/chart";
+import { ICategory, TransactionTypeEnum } from "@/common/types";
+import { useCategory, useTransaction } from "@/common/hooks";
 
 const chartData = [
   {
@@ -41,8 +44,8 @@ const chartData = [
 ];
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
+  amount: {
+    label: "Amount",
   },
   groceries: {
     label: "Groceries",
@@ -90,32 +93,44 @@ export const CategoriesChart = () => {
   };
   const [type, setType] = useState<string>("Expense");
 
-  const { isLoading: isUserLoading, user } = useUser();
+  const { categoriesData } = useCategory();
+  const { transactionsData } = useTransaction();
 
-  const userId = user?.sub;
-  console.log(userId);
-
-  const { isPending: isCategoriesPending, data: data } = useQuery({
-    queryKey: ["categoryData", userId],
-    queryFn: async () => categoryQuery(userId),
-    enabled: !!userId,
-  });
-
-  const dynamicChartConfig = () => {
-    if (data) {
-      let chartConfig: ChartConfig = {
-        total: {
-          label: "Total",
-        },
+  // We need to convert our transaction data into a format that recharts can parse
+  const chartData = useMemo(() => {
+    if (categoriesData && transactionsData) {
+      const calculateCategoryAmount = (category: string) => {
+        return transactionsData
+          .filter((transaction) => transaction.category === category)
+          .reduce((total, transaction) => total + transaction.amount, 0);
       };
-      data.map((e, index) => {
-        chartConfig[e.name] = {
-          label: e.name,
-          color: `hsl(var(--chart-${++index}))`,
+      const convertedData = categoriesData.map((category) => {
+        const parsedName = category.name.toLowerCase().replace(/\s/g, "");
+        return {
+          name: parsedName,
+          amount: calculateCategoryAmount(category.name),
+          type: category.type,
+          fill: `var(--color-${parsedName})`,
         };
       });
-      return chartConfig;
+      return convertedData;
     }
+    return [];
+  }, [categoriesData, transactionsData]);
+
+  const dynamicChartConfig = () => {
+    let chartConfig: ChartConfig = {
+      amount: {
+        label: "Amount",
+      },
+    };
+    categoriesData?.map((e, index) => {
+      chartConfig[e.name.toLowerCase().replace(/\s/g, "")] = {
+        label: e.name,
+        color: `hsl(var(--chart-${++index}))`,
+      };
+    });
+    return chartConfig;
   };
 
   const filteredData = useMemo(
@@ -125,8 +140,9 @@ export const CategoriesChart = () => {
           item.type ===
           TransactionTypeEnum[type as keyof typeof TransactionTypeEnum]
       ),
-    [type]
+    [chartData, type]
   );
+
   return (
     <Card className={classes.container}>
       <CardHeader className={classes.header}>
@@ -140,31 +156,49 @@ export const CategoriesChart = () => {
             <SelectValue placeholder='Select type' />
           </SelectTrigger>
           <SelectContent className='rounded-xl bg-background border-none'>
-            <SelectItem value='Income' className='rounded-lg'>
-              Income
-            </SelectItem>
             <SelectItem value='Expense' className='rounded-lg'>
               Expense
+            </SelectItem>
+            <SelectItem value='Income' className='rounded-lg'>
+              Income
             </SelectItem>
           </SelectContent>
         </Select>
       </CardHeader>
       <CardContent className='pb-0'>
-        <ChartContainer config={chartConfig} className={classes.chart.wrapper}>
+        <ChartContainer
+          config={dynamicChartConfig()}
+          className={classes.chart.wrapper}
+        >
           <RechartsPieChart>
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
             <ChartLegend
-              content={<ChartLegendContent nameKey='category' />}
+              content={<ChartLegendContent nameKey='name' />}
               className={classes.chart.legend}
             />
             <Pie
               data={filteredData}
-              label
-              dataKey='visitors'
-              nameKey='category'
+              labelLine={false}
+              label={({ payload, ...props }) => {
+                return (
+                  <text
+                    cx={props.cx}
+                    cy={props.cy}
+                    x={props.x}
+                    y={props.y}
+                    textAnchor={props.textAnchor}
+                    dominantBaseline={props.dominantBaseline}
+                    fill='hsla(var(--foreground))'
+                  >
+                    {`$${payload.amount}`}
+                  </text>
+                );
+              }}
+              dataKey='amount'
+              nameKey='name'
             />
           </RechartsPieChart>
         </ChartContainer>
